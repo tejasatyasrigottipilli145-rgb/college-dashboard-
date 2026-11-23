@@ -1,0 +1,2422 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Apex Institute of Technology - Student Academic Management Dashboard. View attendance, timetable, assignments, exams, and college announcements.">
+  <title>Student Academic Dashboard | Apex Institute of Technology</title>
+
+  <!-- Google Fonts: Inter for Clean & Modern Dashboard UI -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- External Stylesheet -->
+  <style>
+/* ==========================================================================
+   APEX INSTITUTE OF TECHNOLOGY - STUDENT DASHBOARD STYLESHEET
+   Technologies: Pure CSS3 (Variables, Flexbox, Grid, Animations, Media Queries)
+   College Project: 1st Year B.Tech Web Development
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. CSS VARIABLES (DESIGN SYSTEM)
+   -------------------------------------------------------------------------- */
+:root {
+  /* Brand Color Palette: Navy Blue, White, Light Sky Blue */
+  --color-navy-dark: #0a192f;       /* Deep Midnight Navy */
+  --color-navy-primary: #0f2744;    /* Sidebar & Primary Headings */
+  --color-navy-light: #1e3a5f;      /* Secondary Navy Surface */
+  
+  --color-blue-primary: #2563eb;    /* Vibrant Royal Blue */
+  --color-blue-hover: #1d4ed8;      /* Deep Royal Blue Hover */
+  --color-blue-subtle: #eff6ff;     /* Soft Blue Tint */
+  
+  --color-sky-primary: #0284c7;     /* Sky Blue Accent */
+  --color-sky-light: #e0f2fe;       /* Light Blue Badge Tint */
+  --color-sky-bright: #38bdf8;      /* Bright Light Blue Highlight */
+
+  /* Neutral Surface & Background Colors */
+  --color-bg-body: #f8fafc;         /* Page Background (Clean Canvas) */
+  --color-bg-card: #ffffff;         /* Pure White Card Background */
+  --color-bg-muted: #f1f5f9;        /* Subtle Table & Input Gray */
+  --color-border: #e2e8f0;          /* Clean Structural Borders */
+  --color-border-focus: #93c5fd;    /* Active Border Highlight */
+
+  /* Text Colors */
+  --color-text-main: #0f172a;       /* Primary High-Contrast Text */
+  --color-text-muted: #64748b;      /* Secondary Explanatory Text */
+  --color-text-light: #94a3b8;      /* Meta & Timestamp Text */
+
+  /* Status & Semantic Colors */
+  --color-success: #10b981;         /* Emerald Green for Attendance & Graded */
+  --color-success-bg: #d1fae5;
+  --color-warning: #f59e0b;         /* Amber for Pending & Due Soon */
+  --color-warning-bg: #fef3c7;
+  --color-purple: #8b5cf6;          /* Exams & Academic Workshops */
+  --color-purple-bg: #ede9fe;
+  --color-danger: #ef4444;          /* Critical Warnings & Urgent */
+  --color-danger-bg: #fee2e2;
+
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Shadows for Elevation and Depth */
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+  --shadow-card: 0 4px 16px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+  --shadow-hover: 0 12px 24px -4px rgba(15, 23, 42, 0.1), 0 4px 8px -2px rgba(15, 23, 42, 0.05);
+  --shadow-sidebar: 4px 0 20px rgba(10, 25, 47, 0.08);
+
+  /* Border Radii */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --------------------------------------------------------------------------
+   2. GLOBAL RESET & BASE STYLES
+   -------------------------------------------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-bg-body);
+  color: var(--color-text-main);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: all var(--transition-fast);
+}
+
+ul {
+  list-style: none;
+}
+
+button, input {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* --------------------------------------------------------------------------
+   3. DASHBOARD MAIN LAYOUT (GRID SHELL)
+   Sidebar (260px) + Main Content (1fr)
+   -------------------------------------------------------------------------- */
+.dashboard-container {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+}
+
+/* --------------------------------------------------------------------------
+   4. SIDEBAR NAVIGATION
+   -------------------------------------------------------------------------- */
+.sidebar {
+  background-color: var(--color-navy-dark);
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  box-shadow: var(--shadow-sidebar);
+  z-index: 100;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  overflow-y: auto;
+}
+
+/* College Branding Header */
+.sidebar-header {
+  padding: 1.6rem 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.college-logo {
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, var(--color-blue-primary) 0%, var(--color-sky-primary) 100%);
+  color: #ffffff;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+}
+
+.college-name {
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.college-subtext {
+  font-size: 0.75rem;
+  color: var(--color-sky-bright);
+  font-weight: 500;
+  display: block;
+}
+
+/* Student Mini Profile Card */
+.student-mini-profile {
+  margin: 1.2rem 1rem;
+  padding: 0.95rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.avatar-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2563eb 0%, #38bdf8 100%);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+}
+
+.avatar-small {
+  width: 36px;
+  height: 36px;
+  font-size: 0.85rem;
+}
+
+.student-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.student-name {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.25;
+}
+
+.student-id {
+  font-size: 0.74rem;
+  color: #cbd5e1;
+}
+
+.student-batch {
+  font-size: 0.7rem;
+  color: var(--color-sky-bright);
+  font-weight: 600;
+}
+
+/* Sidebar Navigation Menu */
+.sidebar-nav {
+  padding: 0.5rem 1rem;
+  flex: 1;
+}
+
+.nav-category-title {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #64748b;
+  margin-bottom: 0.6rem;
+  padding-left: 0.6rem;
+}
+
+.nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.7rem 0.85rem;
+  border-radius: var(--radius-md);
+  color: #94a3b8;
+  font-size: 0.9rem;
+  font-weight: 500;
+  position: relative;
+  transition: all var(--transition-normal);
+}
+
+.nav-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  transition: color var(--transition-fast);
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  transform: translateX(3px);
+}
+
+.nav-link:hover .nav-icon {
+  color: var(--color-sky-bright);
+}
+
+.nav-link.active {
+  background: linear-gradient(90deg, rgba(37, 99, 235, 0.25) 0%, rgba(37, 99, 235, 0.08) 100%);
+  color: #ffffff;
+  font-weight: 600;
+  border-left: 3.5px solid var(--color-sky-bright);
+}
+
+.nav-link.active .nav-icon {
+  color: var(--color-sky-bright);
+}
+
+.nav-pill {
+  margin-left: auto;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.15rem 0.55rem;
+  border-radius: var(--radius-full);
+}
+
+.pill-green {
+  background-color: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+}
+
+.pill-amber {
+  background-color: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+}
+
+.pill-blue {
+  background-color: rgba(56, 189, 248, 0.2);
+  color: #7dd3fc;
+}
+
+.nav-logout-item {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.logout-link:hover {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+}
+
+.logout-link:hover .nav-icon {
+  color: #f87171;
+}
+
+/* Sidebar Footer */
+.sidebar-footer {
+  padding: 1.2rem 1.4rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+}
+
+.semester-tag {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.portal-ver {
+  font-size: 0.68rem;
+  color: #64748b;
+  margin-top: 0.15rem;
+}
+
+/* --------------------------------------------------------------------------
+   5. MAIN CONTENT WRAPPER & TOP NAVIGATION BAR
+   -------------------------------------------------------------------------- */
+.main-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-width: 0; /* Prevents flex children overflow */
+}
+
+.topbar {
+  background-color: var(--color-bg-card);
+  border-bottom: 1px solid var(--color-border);
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 90;
+  box-shadow: var(--shadow-sm);
+}
+
+.welcome-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--color-navy-primary);
+  line-height: 1.2;
+}
+
+.welcome-subtitle {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  margin-top: 0.15rem;
+}
+
+/* Topbar Search Bar */
+.topbar-search {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  max-width: 400px;
+  background-color: var(--color-bg-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  padding: 0.35rem 0.4rem 0.35rem 1rem;
+  transition: all var(--transition-normal);
+}
+
+.topbar-search:focus-within {
+  background-color: #ffffff;
+  border-color: var(--color-blue-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.search-icon {
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  margin-right: 0.6rem;
+}
+
+.topbar-search input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--color-text-main);
+  font-size: 0.88rem;
+}
+
+.topbar-search input::placeholder {
+  color: #94a3b8;
+}
+
+.search-submit-btn {
+  background-color: var(--color-navy-primary);
+  color: #ffffff;
+  border: none;
+  outline: none;
+  padding: 0.4rem 1rem;
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.search-submit-btn:hover {
+  background-color: var(--color-blue-primary);
+}
+
+/* Topbar Actions (Date Pill, Notifications, Profile Chip) */
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  flex-shrink: 0;
+}
+
+.date-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  background-color: var(--color-bg-muted);
+  padding: 0.45rem 0.9rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border);
+}
+
+.notification-btn {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--color-bg-muted);
+  color: var(--color-navy-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border);
+  transition: all var(--transition-normal);
+}
+
+.notification-btn:hover {
+  background-color: var(--color-blue-subtle);
+  color: var(--color-blue-primary);
+  border-color: var(--color-blue-primary);
+  transform: translateY(-2px);
+}
+
+.notification-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 18px;
+  height: 18px;
+  background-color: var(--color-danger);
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ffffff;
+}
+
+.profile-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: var(--radius-full);
+  transition: background-color var(--transition-fast);
+}
+
+.profile-chip:hover {
+  background-color: var(--color-bg-muted);
+}
+
+.profile-chip-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-navy-primary);
+  line-height: 1.2;
+}
+
+.profile-role {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   6. DASHBOARD CONTENT & OVERVIEW KPI CARDS
+   -------------------------------------------------------------------------- */
+.dashboard-content {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Overview Section Grid (4 Metric Cards) */
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.stat-card {
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 1.4rem;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+
+.stat-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+}
+
+.card-blue::after { background: linear-gradient(90deg, #2563eb, #38bdf8); }
+.card-amber::after { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+.card-purple::after { background: linear-gradient(90deg, #8b5cf6, #c084fc); }
+.card-green::after { background: linear-gradient(90deg, #10b981, #34d399); }
+
+.stat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.1rem;
+}
+
+.stat-icon-wrapper {
+  width: 46px;
+  height: 46px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-blue { background-color: #dbeafe; color: #1d4ed8; }
+.icon-amber { background-color: #fef3c7; color: #b45309; }
+.icon-purple { background-color: #ede9fe; color: #6d28d9; }
+.icon-green { background-color: #d1fae5; color: #065f46; }
+.icon-navy { background-color: #e2e8f0; color: #0f2744; font-size: 1.25rem; }
+
+.stat-trend {
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-full);
+}
+
+.trend-positive { background-color: #dcfce7; color: #15803d; }
+.trend-warning { background-color: #fef3c7; color: #b45309; }
+.trend-purple { background-color: #ede9fe; color: #6d28d9; }
+
+.stat-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  display: block;
+  margin-bottom: 0.35rem;
+}
+
+.stat-value {
+  font-size: 2.1rem;
+  font-weight: 800;
+  color: var(--color-navy-primary);
+  line-height: 1.1;
+  margin-bottom: 0.75rem;
+}
+
+.stat-scale {
+  font-size: 1rem;
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+/* Mini Progress Bar inside KPI Card */
+.stat-mini-progress {
+  width: 100%;
+  height: 6px;
+  background-color: var(--color-bg-muted);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-bottom: 0.6rem;
+}
+
+.mini-bar {
+  height: 100%;
+  background-color: var(--color-blue-primary);
+  border-radius: var(--radius-full);
+}
+
+.mini-bar-amber { background-color: var(--color-warning); }
+.mini-bar-purple { background-color: var(--color-purple); }
+.mini-bar-green { background-color: var(--color-success); }
+
+.stat-meta {
+  font-size: 0.76rem;
+  color: var(--color-text-muted);
+  display: block;
+}
+
+/* --------------------------------------------------------------------------
+   7. TWO-COLUMN MAIN DASHBOARD GRID
+   Left Column (65%): Attendance, Timetable, Assignments
+   Right Column (35%): Announcements, Events, Resources
+   -------------------------------------------------------------------------- */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1.8fr 1.2fr;
+  gap: 2rem;
+}
+
+.grid-left-col,
+.grid-right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Reusable Panel Card Styling */
+.dashboard-panel {
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 1.6rem;
+  box-shadow: var(--shadow-card);
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.4rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.panel-title-group {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.panel-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+}
+
+.panel-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--color-navy-primary);
+  line-height: 1.2;
+}
+
+.panel-desc {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  margin-top: 0.15rem;
+}
+
+/* Generic Badges */
+.badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--radius-full);
+}
+
+.badge-success { background-color: #dcfce7; color: #15803d; }
+.badge-primary { background-color: #dbeafe; color: #1e40af; }
+.badge-accent { background-color: #fee2e2; color: #b91c1c; }
+
+/* --------------------------------------------------------------------------
+   8. D. ATTENDANCE SECTION (CSS PROGRESS BARS)
+   -------------------------------------------------------------------------- */
+.attendance-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.attendance-item {
+  background-color: var(--color-bg-body);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.2rem;
+  transition: all var(--transition-normal);
+}
+
+.attendance-item:hover {
+  background-color: #ffffff;
+  box-shadow: var(--shadow-sm);
+  border-color: var(--color-border-focus);
+}
+
+.subject-info-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.65rem;
+}
+
+.subject-name-box {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.subject-code {
+  font-size: 0.75rem;
+  font-weight: 700;
+  background-color: #e2e8f0;
+  color: var(--color-navy-primary);
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-sm);
+}
+
+.subject-title {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--color-navy-primary);
+}
+
+.subject-stats {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.class-count {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+}
+
+.percentage {
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.text-green { color: #10b981; }
+.text-blue { color: #2563eb; }
+.text-sky { color: #0284c7; }
+
+/* Custom CSS Progress Bars */
+.progress-container {
+  width: 100%;
+  height: 8px;
+  background-color: #e2e8f0;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 1s ease-in-out;
+}
+
+.bar-green { background: linear-gradient(90deg, #10b981 0%, #34d399 100%); }
+.bar-blue { background: linear-gradient(90deg, #2563eb 0%, #60a5fa 100%); }
+.bar-sky { background: linear-gradient(90deg, #0284c7 0%, #38bdf8 100%); }
+
+/* --------------------------------------------------------------------------
+   9. E. TODAY'S TIMETABLE (5 PERIODS TABLE)
+   -------------------------------------------------------------------------- */
+.timetable-table-wrapper {
+  overflow-x: auto;
+}
+
+.timetable-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.88rem;
+}
+
+.timetable-table th {
+  padding: 0.8rem 1rem;
+  background-color: var(--color-bg-muted);
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid var(--color-border);
+}
+
+.timetable-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: middle;
+}
+
+.timetable-table tbody tr {
+  transition: background-color var(--transition-fast);
+}
+
+.timetable-table tbody tr:hover {
+  background-color: var(--color-blue-subtle);
+}
+
+/* Active Class Highlight */
+.timetable-table tr.active-period {
+  background-color: #f0fdf4;
+  border-left: 4px solid var(--color-success);
+}
+
+.time-col {
+  white-space: nowrap;
+}
+
+.period-badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  background-color: #e2e8f0;
+  color: var(--color-navy-primary);
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-sm);
+  margin-right: 0.4rem;
+}
+
+.badge-active-p {
+  background-color: var(--color-success);
+  color: #ffffff;
+}
+
+.table-subject {
+  display: block;
+  font-size: 0.92rem;
+  color: var(--color-navy-primary);
+}
+
+.table-code {
+  font-size: 0.74rem;
+  color: var(--color-text-muted);
+}
+
+/* Faculty Info Chip */
+.faculty-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-weight: 600;
+  color: var(--color-navy-primary);
+}
+
+.faculty-avatar {
+  width: 28px;
+  height: 28px;
+  background-color: #dbeafe;
+  color: #1e40af;
+  border-radius: 50%;
+  font-size: 0.72rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.room-pill {
+  display: inline-block;
+  background-color: var(--color-bg-muted);
+  color: var(--color-navy-primary);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+}
+
+.room-active {
+  background-color: #dcfce7;
+  color: #15803d;
+  border-color: #86efac;
+}
+
+/* Timetable Status Pills */
+.status-pill {
+  display: inline-block;
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+
+.pill-gray { background-color: #f1f5f9; color: #64748b; }
+.pill-live { background-color: #dcfce7; color: #166534; font-weight: 800; }
+.pill-upcoming { background-color: #eff6ff; color: #1d4ed8; }
+
+/* Recess / Break Rows */
+.break-row td {
+  padding: 0.55rem 1rem;
+  background-color: var(--color-bg-muted);
+  text-align: center;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.break-text {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  letter-spacing: 0.04em;
+}
+
+/* --------------------------------------------------------------------------
+   10. F. ASSIGNMENTS SECTION
+   -------------------------------------------------------------------------- */
+.assignments-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.2rem;
+}
+
+.assignment-card {
+  background-color: var(--color-bg-body);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  transition: all var(--transition-normal);
+}
+
+.assignment-card:hover {
+  background-color: #ffffff;
+  border-color: var(--color-blue-primary);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-2px);
+}
+
+.assignment-badge-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.65rem;
+}
+
+.course-tag {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--color-blue-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.status-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-full);
+}
+
+.badge-pending {
+  background-color: #fef3c7;
+  color: #b45309;
+}
+
+.badge-review {
+  background-color: #e0f2fe;
+  color: #0369a1;
+}
+
+.badge-completed {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+.assignment-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-navy-primary);
+  line-height: 1.35;
+  margin-bottom: 0.4rem;
+}
+
+.assignment-details {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  line-height: 1.45;
+  margin-bottom: 1.1rem;
+  flex: 1;
+}
+
+.assignment-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.75rem;
+  border-top: 1px dashed var(--color-border);
+  font-size: 0.76rem;
+}
+
+.due-date {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--color-text-muted);
+}
+
+.due-icon {
+  font-size: 0.85rem;
+}
+
+.max-marks, .grade-tag {
+  font-weight: 700;
+  color: var(--color-navy-primary);
+}
+
+.grade-tag {
+  color: #15803d;
+}
+
+/* --------------------------------------------------------------------------
+   11. G. ANNOUNCEMENTS SECTION
+   -------------------------------------------------------------------------- */
+.announcements-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.notice-card {
+  background-color: var(--color-bg-body);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 1.1rem 1.25rem;
+  transition: all var(--transition-normal);
+}
+
+.notice-card:hover {
+  background-color: #ffffff;
+  border-color: var(--color-blue-primary);
+  box-shadow: var(--shadow-sm);
+  transform: translateX(3px);
+}
+
+.notice-high {
+  border-left: 3.5px solid var(--color-danger);
+}
+
+.notice-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.notice-tag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.15rem 0.55rem;
+  border-radius: var(--radius-sm);
+}
+
+.tag-exam { background-color: #fee2e2; color: #b91c1c; }
+.tag-tech { background-color: #e0f2fe; color: #0369a1; }
+.tag-library { background-color: #fef3c7; color: #b45309; }
+.tag-seminar { background-color: #ede9fe; color: #6d28d9; }
+
+.notice-time {
+  font-size: 0.72rem;
+  color: var(--color-text-light);
+}
+
+.notice-headline {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--color-navy-primary);
+  line-height: 1.35;
+  margin-bottom: 0.35rem;
+}
+
+.notice-summary {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  line-height: 1.45;
+  margin-bottom: 0.65rem;
+}
+
+.notice-link {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-blue-primary);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.notice-link:hover {
+  color: var(--color-blue-hover);
+  text-decoration: underline;
+}
+
+/* --------------------------------------------------------------------------
+   12. H. UPCOMING EVENTS SECTION
+   -------------------------------------------------------------------------- */
+.events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.event-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background-color: var(--color-bg-body);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 1.1rem;
+  transition: all var(--transition-normal);
+}
+
+.event-card:hover {
+  background-color: #ffffff;
+  border-color: var(--color-sky-bright);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-2px);
+}
+
+/* Event Date Badge */
+.event-date-badge {
+  width: 54px;
+  height: 56px;
+  background: linear-gradient(135deg, var(--color-blue-primary) 0%, #1d4ed8 100%);
+  color: #ffffff;
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+}
+
+.date-amber {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  box-shadow: 0 4px 10px rgba(245, 158, 11, 0.25);
+}
+
+.date-purple {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  box-shadow: 0 4px 10px rgba(139, 92, 246, 0.25);
+}
+
+.date-month {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.date-day {
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.event-content {
+  flex: 1;
+}
+
+.event-category {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--color-sky-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: block;
+  margin-bottom: 0.2rem;
+}
+
+.event-name {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--color-navy-primary);
+  line-height: 1.3;
+  margin-bottom: 0.3rem;
+}
+
+.event-desc {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  line-height: 1.45;
+  margin-bottom: 0.4rem;
+}
+
+.event-venue {
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--color-navy-light);
+  display: block;
+}
+
+/* Quick Academic Resources */
+.resource-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.resource-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background-color: var(--color-bg-body);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-navy-primary);
+  transition: all var(--transition-fast);
+}
+
+.resource-btn:hover {
+  background-color: var(--color-blue-subtle);
+  border-color: var(--color-blue-primary);
+  color: var(--color-blue-primary);
+  transform: translateX(3px);
+}
+
+.resource-icon {
+  font-size: 1.1rem;
+}
+
+/* --------------------------------------------------------------------------
+   13. BUTTONS & UI UTILITIES
+   -------------------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-sm {
+  font-size: 0.78rem;
+  padding: 0.35rem 0.85rem;
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--color-navy-primary);
+  border: 1px solid var(--color-border);
+}
+
+.btn-outline:hover {
+  background-color: var(--color-navy-primary);
+  color: #ffffff;
+  border-color: var(--color-navy-primary);
+}
+
+/* --------------------------------------------------------------------------
+   14. DASHBOARD FOOTER
+   -------------------------------------------------------------------------- */
+.dashboard-footer {
+  background-color: var(--color-bg-card);
+  border-top: 1px solid var(--color-border);
+  padding: 1.4rem 2rem;
+  margin-top: auto;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+}
+
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.footer-note {
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+/* --------------------------------------------------------------------------
+   15. RESPONSIVE DESIGN (MEDIA QUERIES)
+   Desktop (>1024px) | Tablet (768px - 1024px) | Mobile (<768px)
+   -------------------------------------------------------------------------- */
+
+/* Large Tablets / Laptops */
+@media (max-width: 1200px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .overview-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Tablets (max-width: 1024px) */
+@media (max-width: 1024px) {
+  .dashboard-container {
+    grid-template-columns: 220px 1fr;
+  }
+
+  .topbar {
+    padding: 0.9rem 1.4rem;
+  }
+
+  .dashboard-content {
+    padding: 1.4rem;
+  }
+
+  .assignments-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Mobile Devices & Small Tablets (max-width: 768px) */
+@media (max-width: 768px) {
+  .dashboard-container {
+    grid-template-columns: 1fr;
+  }
+
+  /* Make sidebar collapsible / top bar in mobile */
+  .sidebar {
+    position: static;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .sidebar-nav {
+    padding: 0.5rem;
+  }
+
+  .nav-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.35rem;
+  }
+
+  .nav-link {
+    flex-direction: column;
+    text-align: center;
+    padding: 0.6rem 0.4rem;
+    font-size: 0.75rem;
+    gap: 0.3rem;
+  }
+
+  .nav-pill {
+    display: none;
+  }
+
+  .sidebar-footer {
+    display: none;
+  }
+
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .topbar-search {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .topbar-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .date-pill {
+    display: none;
+  }
+
+  .overview-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .dashboard-content {
+    padding: 1rem;
+  }
+
+  .timetable-table th,
+  .timetable-table td {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .faculty-chip {
+    font-size: 0.78rem;
+  }
+
+  .footer-inner {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+/* Small Mobile Screens (max-width: 480px) */
+@media (max-width: 480px) {
+  .nav-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stat-value {
+    font-size: 1.75rem;
+  }
+
+  .subject-info-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+  }
+
+  .subject-stats {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+</style>
+</head>
+<body>
+
+  <!-- ======================================================================
+       MAIN DASHBOARD CONTAINER (Sidebar + Main Content Shell)
+       ====================================================================== -->
+  <div class="dashboard-container">
+
+    <!-- ==================================================================
+         A. SIDEBAR NAVIGATION
+         Includes College Branding, Student Identity & Navigation Links
+         ================================================================== -->
+    <aside class="sidebar">
+      
+      <!-- College Branding Header -->
+      <div class="sidebar-header">
+        <div class="college-logo">
+          <!-- Graduation Cap Vector SVG -->
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+            <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+          </svg>
+        </div>
+        <div class="college-info">
+          <h2 class="college-name">APEX INSTITUTE</h2>
+          <span class="college-subtext">Technology &amp; Science</span>
+        </div>
+      </div>
+
+      <!-- Student Mini Profile Card -->
+      <div class="student-mini-profile">
+        <div class="avatar-circle">RS</div>
+        <div class="student-meta">
+          <span class="student-name">Rahul Sharma</span>
+          <span class="student-id">Roll No: 24CSE108</span>
+          <span class="student-batch">B.Tech CSE • Year 1</span>
+        </div>
+      </div>
+
+      <!-- Navigation Menu -->
+      <nav class="sidebar-nav" aria-label="Main Dashboard Navigation">
+        <span class="nav-category-title">ACADEMIC MENU</span>
+        <ul class="nav-list">
+          
+          <li class="nav-item">
+            <a href="#overview" class="nav-link active">
+              <span class="nav-icon">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+              </span>
+              <span class="nav-text">Dashboard</span>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="#profile" class="nav-link">
+              <span class="nav-icon">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </span>
+              <span class="nav-text">My Profile</span>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="#attendance" class="nav-link">
+              <span class="nav-icon">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                  <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                  <path d="m9 14 2 2 4-4"></path>
+                </svg>
+              </span>
+              <span class="nav-text">Attendance</span>
+              <span class="nav-pill pill-green">92%</span>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="#assignments" class="nav-link">
+              <span class="nav-icon">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+              </span>
+              <span class="nav-text">Assignments</span>
+              <span class="nav-pill pill-amber">3 Due</span>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="#examination" class="nav-link">
+              <span class="nav-icon">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+              </span>
+              <span class="nav-text">Examination</span>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="#timetable" class="nav-link">
+              <span class="nav-icon">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+              </span>
+              <span class="nav-text">Timetable</span>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="#results" class="nav-link">
+              <span class="nav-icon">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="20" x2="18" y2="10"></line>
+                  <line x1="12" y1="20" x2="12" y2="4"></line>
+                  <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+              </span>
+              <span class="nav-text">Results</span>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="#announcements" class="nav-link">
+              <span class="nav-icon">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                  <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+              </span>
+              <span class="nav-text">Announcements</span>
+              <span class="nav-pill pill-blue">New</span>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="#library" class="nav-link">
+              <span class="nav-icon">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                </svg>
+              </span>
+              <span class="nav-text">Library</span>
+            </a>
+          </li>
+
+          <li class="nav-item nav-logout-item">
+            <a href="#login" class="nav-link logout-link">
+              <span class="nav-icon">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                  <polyline points="16 17 21 12 16 7"></polyline>
+                  <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+              </span>
+              <span class="nav-text">Logout</span>
+            </a>
+          </li>
+
+        </ul>
+      </nav>
+
+      <!-- Sidebar Support Footer -->
+      <div class="sidebar-footer">
+        <span class="semester-tag">Semester II • 2026</span>
+        <span class="portal-ver">Academic Portal v2.4</span>
+      </div>
+
+    </aside>
+
+    <!-- ==================================================================
+         MAIN CONTENT AREA
+         Top Navigation Bar + Scrollable Multi-Section Dashboard Grid
+         ================================================================== -->
+    <div class="main-wrapper">
+
+      <!-- ==============================================================
+           B. TOP NAVIGATION BAR
+           Welcome message, search bar, notification badge & student profile
+           ============================================================== -->
+      <header class="topbar">
+        
+        <!-- Welcome Greeting -->
+        <div class="welcome-box">
+          <h1 class="welcome-title">Welcome Back, Student! 👋</h1>
+          <p class="welcome-subtitle">B.Tech Computer Science &amp; Engineering &bull; Section A</p>
+        </div>
+
+        <!-- Search Bar -->
+        <form class="topbar-search" action="#overview" method="GET" role="search">
+          <span class="search-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </span>
+          <input type="search" placeholder="Search subjects, faculty, classrooms..." aria-label="Search college portal">
+          <button type="submit" class="search-submit-btn">Search</button>
+        </form>
+
+        <!-- Right Quick Actions (Notifications + Student Profile) -->
+        <div class="topbar-actions">
+          
+          <!-- Calendar Date Pill -->
+          <div class="date-pill">
+            <span class="calendar-icon">📅</span>
+            <span>Monday, Nov 23, 2026</span>
+          </div>
+
+          <!-- Notification Bell -->
+          <a href="#announcements" class="notification-btn" aria-label="Notifications: 4 unread notices">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span class="notification-badge">4</span>
+          </a>
+
+          <!-- Profile Badge -->
+          <a href="#profile" class="profile-chip" aria-label="View Student Profile">
+            <div class="avatar-circle avatar-small">RS</div>
+            <div class="profile-chip-info">
+              <span class="profile-name">Rahul Sharma</span>
+              <span class="profile-role">Student</span>
+            </div>
+          </a>
+
+        </div>
+
+      </header>
+
+      <!-- ==============================================================
+           DASHBOARD BODY CONTENT
+           KPI Cards, Attendance, Timetable, Assignments, Announcements, Events
+           ============================================================== -->
+      <main class="dashboard-content" id="overview">
+
+        <!-- ============================================================
+             C. DASHBOARD OVERVIEW CARDS (4 Key Information Cards)
+             Attendance (92%), Pending Assignments (3), Exams (2), CGPA (8.7)
+             ============================================================ -->
+        <section class="overview-section" aria-label="Academic Overview Metrics">
+          <div class="overview-grid">
+
+            <!-- Card 1: Total Attendance -->
+            <article class="stat-card card-blue">
+              <div class="stat-header">
+                <span class="stat-icon-wrapper icon-blue">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                    <path d="m9 14 2 2 4-4"></path>
+                  </svg>
+                </span>
+                <span class="stat-trend trend-positive">+2.4% this month</span>
+              </div>
+              <div class="stat-details">
+                <span class="stat-label">Total Attendance</span>
+                <h3 class="stat-value">92%</h3>
+                <div class="stat-mini-progress">
+                  <div class="mini-bar" style="width: 92%;"></div>
+                </div>
+                <span class="stat-meta">138 of 150 lectures attended &bull; Safe Zone</span>
+              </div>
+            </article>
+
+            <!-- Card 2: Pending Assignments -->
+            <article class="stat-card card-amber">
+              <div class="stat-header">
+                <span class="stat-icon-wrapper icon-amber">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                  </svg>
+                </span>
+                <span class="stat-trend trend-warning">2 due this week</span>
+              </div>
+              <div class="stat-details">
+                <span class="stat-label">Pending Assignments</span>
+                <h3 class="stat-value">3</h3>
+                <div class="stat-mini-progress">
+                  <div class="mini-bar mini-bar-amber" style="width: 60%;"></div>
+                </div>
+                <span class="stat-meta">Next submission: Nov 28 (DSA Lab)</span>
+              </div>
+            </article>
+
+            <!-- Card 3: Upcoming Exams -->
+            <article class="stat-card card-purple">
+              <div class="stat-header">
+                <span class="stat-icon-wrapper icon-purple">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                </span>
+                <span class="stat-trend trend-purple">Mid-Term Exams</span>
+              </div>
+              <div class="stat-details">
+                <span class="stat-label">Upcoming Exams</span>
+                <h3 class="stat-value">2</h3>
+                <div class="stat-mini-progress">
+                  <div class="mini-bar mini-bar-purple" style="width: 40%;"></div>
+                </div>
+                <span class="stat-meta">Commencing Dec 08 &bull; Hall Tickets Available</span>
+              </div>
+            </article>
+
+            <!-- Card 4: Current CGPA -->
+            <article class="stat-card card-green">
+              <div class="stat-header">
+                <span class="stat-icon-wrapper icon-green">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="8" r="7"></circle>
+                    <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+                  </svg>
+                </span>
+                <span class="stat-trend trend-positive">Top 5% Rank</span>
+              </div>
+              <div class="stat-details">
+                <span class="stat-label">Cumulative CGPA</span>
+                <h3 class="stat-value">8.7 <span class="stat-scale">/ 10</span></h3>
+                <div class="stat-mini-progress">
+                  <div class="mini-bar mini-bar-green" style="width: 87%;"></div>
+                </div>
+                <span class="stat-meta">Semester I: 8.6 &bull; Passed with Distinction</span>
+              </div>
+            </article>
+
+          </div>
+        </section>
+
+        <!-- ============================================================
+             TWO-COLUMN MAIN DASHBOARD GRID
+             Left Column: Attendance Breakdown, Timetable & Assignments
+             Right Column: Announcements, Upcoming Events & Resources
+             ============================================================ -->
+        <div class="dashboard-grid">
+
+          <!-- ==========================================================
+               LEFT COLUMN (PRIMARY ACADEMIC MODULES)
+               ========================================================== -->
+          <div class="grid-left-col">
+
+            <!-- ========================================================
+                 D. ATTENDANCE SECTION (Overall + Subject-wise with Progress Bars)
+                 ======================================================== -->
+            <section id="attendance" class="dashboard-panel panel-attendance">
+              <div class="panel-header">
+                <div class="panel-title-group">
+                  <span class="panel-icon icon-navy">📊</span>
+                  <div>
+                    <h2 class="panel-title">Subject-wise Attendance</h2>
+                    <p class="panel-desc">Mandatory university requirement: Minimum 75% attendance per subject.</p>
+                  </div>
+                </div>
+                <span class="badge badge-success">Overall: 92% (Safe)</span>
+              </div>
+
+              <!-- Subject Attendance List with Custom CSS Progress Bars -->
+              <div class="attendance-list">
+
+                <!-- Subject 1: Data Structures & Algorithms -->
+                <article class="attendance-item">
+                  <div class="subject-info-row">
+                    <div class="subject-name-box">
+                      <strong class="subject-code">CS201</strong>
+                      <span class="subject-title">Data Structures &amp; Algorithms</span>
+                    </div>
+                    <div class="subject-stats">
+                      <span class="class-count">38 / 40 Attended</span>
+                      <strong class="percentage text-green">95%</strong>
+                    </div>
+                  </div>
+                  <div class="progress-container" role="progressbar" aria-valuenow="95" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar bar-green" style="width: 95%;"></div>
+                  </div>
+                </article>
+
+                <!-- Subject 2: Engineering Mathematics-II -->
+                <article class="attendance-item">
+                  <div class="subject-info-row">
+                    <div class="subject-name-box">
+                      <strong class="subject-code">MA202</strong>
+                      <span class="subject-title">Engineering Mathematics - II</span>
+                    </div>
+                    <div class="subject-stats">
+                      <span class="class-count">36 / 40 Attended</span>
+                      <strong class="percentage text-green">90%</strong>
+                    </div>
+                  </div>
+                  <div class="progress-container" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar bar-green" style="width: 90%;"></div>
+                  </div>
+                </article>
+
+                <!-- Subject 3: Digital Logic Design -->
+                <article class="attendance-item">
+                  <div class="subject-info-row">
+                    <div class="subject-name-box">
+                      <strong class="subject-code">CS203</strong>
+                      <span class="subject-title">Digital Logic &amp; Computer Architecture</span>
+                    </div>
+                    <div class="subject-stats">
+                      <span class="class-count">31 / 35 Attended</span>
+                      <strong class="percentage text-blue">88%</strong>
+                    </div>
+                  </div>
+                  <div class="progress-container" role="progressbar" aria-valuenow="88" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar bar-blue" style="width: 88%;"></div>
+                  </div>
+                </article>
+
+                <!-- Subject 4: Web Technologies Lab -->
+                <article class="attendance-item">
+                  <div class="subject-info-row">
+                    <div class="subject-name-box">
+                      <strong class="subject-code">CS204L</strong>
+                      <span class="subject-title">Web Technologies Laboratory</span>
+                    </div>
+                    <div class="subject-stats">
+                      <span class="class-count">24 / 25 Attended</span>
+                      <strong class="percentage text-green">96%</strong>
+                    </div>
+                  </div>
+                  <div class="progress-container" role="progressbar" aria-valuenow="96" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar bar-green" style="width: 96%;"></div>
+                  </div>
+                </article>
+
+                <!-- Subject 5: Environmental Science & Engineering -->
+                <article class="attendance-item">
+                  <div class="subject-info-row">
+                    <div class="subject-name-box">
+                      <strong class="subject-code">ES205</strong>
+                      <span class="subject-title">Environmental Science &amp; Sustainability</span>
+                    </div>
+                    <div class="subject-stats">
+                      <span class="class-count">17 / 20 Attended</span>
+                      <strong class="percentage text-sky">85%</strong>
+                    </div>
+                  </div>
+                  <div class="progress-container" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar bar-sky" style="width: 85%;"></div>
+                  </div>
+                </article>
+
+              </div>
+            </section>
+
+            <!-- ========================================================
+                 E. TODAY'S TIMETABLE (At Least 5 Class Periods)
+                 Time, Subject, Faculty, Classroom
+                 ======================================================== -->
+            <section id="timetable" class="dashboard-panel panel-timetable">
+              <div class="panel-header">
+                <div class="panel-title-group">
+                  <span class="panel-icon icon-navy">🕒</span>
+                  <div>
+                    <h2 class="panel-title">Today's Class Timetable</h2>
+                    <p class="panel-desc">Monday Schedule &bull; Section A &bull; Semester II</p>
+                  </div>
+                </div>
+                <span class="badge badge-primary">5 Periods Scheduled</span>
+              </div>
+
+              <div class="timetable-container">
+                <div class="timetable-table-wrapper">
+                  <table class="timetable-table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Period / Time</th>
+                        <th scope="col">Subject</th>
+                        <th scope="col">Faculty</th>
+                        <th scope="col">Classroom</th>
+                        <th scope="col">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+
+                      <!-- Period 1 -->
+                      <tr class="completed-period">
+                        <td class="time-col">
+                          <span class="period-badge">P1</span>
+                          <strong>09:00 &ndash; 10:00 AM</strong>
+                        </td>
+                        <td>
+                          <strong class="table-subject">Data Structures &amp; Algorithms</strong>
+                          <span class="table-code">CS201 &bull; Theory</span>
+                        </td>
+                        <td>
+                          <div class="faculty-chip">
+                            <span class="faculty-avatar">CW</span>
+                            <span>Prof. Chen Wei</span>
+                          </div>
+                        </td>
+                        <td>
+                          <span class="room-pill">Room LH-201</span>
+                        </td>
+                        <td>
+                          <span class="status-pill pill-gray">Completed</span>
+                        </td>
+                      </tr>
+
+                      <!-- Period 2 -->
+                      <tr class="active-period">
+                        <td class="time-col">
+                          <span class="period-badge badge-active-p">P2</span>
+                          <strong>10:00 &ndash; 11:00 AM</strong>
+                        </td>
+                        <td>
+                          <strong class="table-subject">Engineering Mathematics - II</strong>
+                          <span class="table-code">MA202 &bull; Calculus &amp; ODEs</span>
+                        </td>
+                        <td>
+                          <div class="faculty-chip">
+                            <span class="faculty-avatar">HD</span>
+                            <span>Dr. H. K. Dass</span>
+                          </div>
+                        </td>
+                        <td>
+                          <span class="room-pill room-active">Room LH-204</span>
+                        </td>
+                        <td>
+                          <span class="status-pill pill-live">● Live Now</span>
+                        </td>
+                      </tr>
+
+                      <!-- Short Recess Break Indicator -->
+                      <tr class="break-row">
+                        <td colspan="5">
+                          <span class="break-text">☕ Morning Break &bull; 11:00 AM &ndash; 11:15 AM (15 Mins)</span>
+                        </td>
+                      </tr>
+
+                      <!-- Period 3 -->
+                      <tr>
+                        <td class="time-col">
+                          <span class="period-badge">P3</span>
+                          <strong>11:15 &ndash; 12:15 PM</strong>
+                        </td>
+                        <td>
+                          <strong class="table-subject">Digital Logic Design</strong>
+                          <span class="table-code">CS203 &bull; Sequential Circuits</span>
+                        </td>
+                        <td>
+                          <div class="faculty-chip">
+                            <span class="faculty-avatar">AR</span>
+                            <span>Dr. Anita Rao</span>
+                          </div>
+                        </td>
+                        <td>
+                          <span class="room-pill">Electronics Lab 3</span>
+                        </td>
+                        <td>
+                          <span class="status-pill pill-upcoming">Upcoming</span>
+                        </td>
+                      </tr>
+
+                      <!-- Lunch Break Indicator -->
+                      <tr class="break-row">
+                        <td colspan="5">
+                          <span class="break-text">🍱 Lunch Recess &bull; 12:15 PM &ndash; 01:15 PM (60 Mins)</span>
+                        </td>
+                      </tr>
+
+                      <!-- Period 4 -->
+                      <tr>
+                        <td class="time-col">
+                          <span class="period-badge">P4</span>
+                          <strong>01:15 &ndash; 02:15 PM</strong>
+                        </td>
+                        <td>
+                          <strong class="table-subject">Web Technologies Lab</strong>
+                          <span class="table-code">CS204L &bull; HTML5 &amp; CSS3 Project</span>
+                        </td>
+                        <td>
+                          <div class="faculty-chip">
+                            <span class="faculty-avatar">AR</span>
+                            <span>Prof. Alex Rivera</span>
+                          </div>
+                        </td>
+                        <td>
+                          <span class="room-pill">Computer Lab 2</span>
+                        </td>
+                        <td>
+                          <span class="status-pill pill-upcoming">Upcoming</span>
+                        </td>
+                      </tr>
+
+                      <!-- Period 5 -->
+                      <tr>
+                        <td class="time-col">
+                          <span class="period-badge">P5</span>
+                          <strong>02:15 &ndash; 03:15 PM</strong>
+                        </td>
+                        <td>
+                          <strong class="table-subject">Environmental Science</strong>
+                          <span class="table-code">ES205 &bull; Renewable Energy Systems</span>
+                        </td>
+                        <td>
+                          <div class="faculty-chip">
+                            <span class="faculty-avatar">NH</span>
+                            <span>Dr. Neil Harris</span>
+                          </div>
+                        </td>
+                        <td>
+                          <span class="room-pill">Room LH-102</span>
+                        </td>
+                        <td>
+                          <span class="status-pill pill-upcoming">Upcoming</span>
+                        </td>
+                      </tr>
+
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+
+            <!-- ========================================================
+                 F. ASSIGNMENTS SECTION
+                 Name, Subject, Submission Date, and Status Badges
+                 ======================================================== -->
+            <section id="assignments" class="dashboard-panel panel-assignments">
+              <div class="panel-header">
+                <div class="panel-title-group">
+                  <span class="panel-icon icon-navy">📝</span>
+                  <div>
+                    <h2 class="panel-title">Semester Course Assignments</h2>
+                    <p class="panel-desc">Track and review submission deadlines for active subjects.</p>
+                  </div>
+                </div>
+                <a href="#assignments" class="btn btn-sm btn-outline">View All (8)</a>
+              </div>
+
+              <div class="assignments-grid">
+
+                <!-- Assignment 1 -->
+                <article class="assignment-card">
+                  <div class="assignment-badge-bar">
+                    <span class="course-tag">CS201 &bull; Data Structures</span>
+                    <span class="status-badge badge-pending">Pending</span>
+                  </div>
+                  <h3 class="assignment-title">Binary Search Tree &amp; Balanced AVL Traversal</h3>
+                  <p class="assignment-details">Implement recursive insertion, deletion, and level-order traversal algorithms in C++.</p>
+                  <div class="assignment-footer">
+                    <div class="due-date">
+                      <span class="due-icon">⏰</span>
+                      <span>Due: <strong>Nov 28, 2026</strong> (5 Days Left)</span>
+                    </div>
+                    <span class="max-marks">20 Marks</span>
+                  </div>
+                </article>
+
+                <!-- Assignment 2 -->
+                <article class="assignment-card">
+                  <div class="assignment-badge-bar">
+                    <span class="course-tag">MA202 &bull; Engineering Math</span>
+                    <span class="status-badge badge-pending">Pending</span>
+                  </div>
+                  <h3 class="assignment-title">Second Order Differential Equations &amp; Laplace</h3>
+                  <p class="assignment-details">Solve textbook problem sets 4.2 to 4.5 on non-homogeneous ODEs with initial values.</p>
+                  <div class="assignment-footer">
+                    <div class="due-date">
+                      <span class="due-icon">⏰</span>
+                      <span>Due: <strong>Nov 30, 2026</strong> (7 Days Left)</span>
+                    </div>
+                    <span class="max-marks">15 Marks</span>
+                  </div>
+                </article>
+
+                <!-- Assignment 3 -->
+                <article class="assignment-card">
+                  <div class="assignment-badge-bar">
+                    <span class="course-tag">CS203 &bull; Digital Logic</span>
+                    <span class="status-badge badge-review">In Review</span>
+                  </div>
+                  <h3 class="assignment-title">Synchronous 4-Bit Up/Down Counter Design</h3>
+                  <p class="assignment-details">Design state diagram, excitation tables, and schematic simulation using Logisim software.</p>
+                  <div class="assignment-footer">
+                    <div class="due-date">
+                      <span class="due-icon">📄</span>
+                      <span>Submitted: <strong>Nov 21, 2026</strong></span>
+                    </div>
+                    <span class="max-marks">20 Marks</span>
+                  </div>
+                </article>
+
+                <!-- Assignment 4 -->
+                <article class="assignment-card card-completed">
+                  <div class="assignment-badge-bar">
+                    <span class="course-tag">CS204L &bull; Web Tech</span>
+                    <span class="status-badge badge-completed">Completed</span>
+                  </div>
+                  <h3 class="assignment-title">Responsive Online Bookstore Website (HTML/CSS)</h3>
+                  <p class="assignment-details">Construct a multi-section bookstore portal with CSS Flexbox, Grid, and mobile responsiveness.</p>
+                  <div class="assignment-footer">
+                    <div class="due-date text-green">
+                      <span class="due-icon">✓</span>
+                      <span>Graded: <strong>19.5 / 20 Marks</strong></span>
+                    </div>
+                    <span class="grade-tag">Grade: A+</span>
+                  </div>
+                </article>
+
+              </div>
+            </section>
+
+          </div>
+
+          <!-- ==========================================================
+               RIGHT COLUMN (ANNOUNCEMENTS, EVENTS & STUDENT TOOLS)
+               ========================================================== -->
+          <div class="grid-right-col">
+
+            <!-- ========================================================
+                 G. ANNOUNCEMENTS SECTION
+                 College announcements, exam notices, and circulars
+                 ======================================================== -->
+            <section id="announcements" class="dashboard-panel panel-announcements">
+              <div class="panel-header">
+                <div class="panel-title-group">
+                  <span class="panel-icon icon-navy">📢</span>
+                  <div>
+                    <h2 class="panel-title">Campus Announcements</h2>
+                    <p class="panel-desc">Official academic notifications &amp; circulars.</p>
+                  </div>
+                </div>
+                <span class="badge badge-accent">4 New</span>
+              </div>
+
+              <div class="announcements-feed">
+
+                <!-- Notice 1 -->
+                <article class="notice-card notice-high">
+                  <div class="notice-top">
+                    <span class="notice-tag tag-exam">Examinations</span>
+                    <span class="notice-time">2 hours ago</span>
+                  </div>
+                  <h3 class="notice-headline">Mid-Semester Examination Schedule Published</h3>
+                  <p class="notice-summary">
+                    Mid-term exams for 1st Year B.Tech students will commence on December 08, 2026. Hall tickets can be downloaded from the portal.
+                  </p>
+                  <a href="#examination" class="notice-link">View Exam Timetable &rarr;</a>
+                </article>
+
+                <!-- Notice 2 -->
+                <article class="notice-card">
+                  <div class="notice-top">
+                    <span class="notice-tag tag-tech">Hackathon</span>
+                    <span class="notice-time">Yesterday</span>
+                  </div>
+                  <h3 class="notice-headline">National Inter-College Hackathon 2026</h3>
+                  <p class="notice-summary">
+                    Registrations are now open for the 36-hour flagship software hackathon. Grand prize pool of ₹1,50,000 with industry mentorship.
+                  </p>
+                  <a href="#events" class="notice-link">Register Team &rarr;</a>
+                </article>
+
+                <!-- Notice 3 -->
+                <article class="notice-card">
+                  <div class="notice-top">
+                    <span class="notice-tag tag-library">Library</span>
+                    <span class="notice-time">2 days ago</span>
+                  </div>
+                  <h3 class="notice-headline">Central Library 24/7 Extended Hours</h3>
+                  <p class="notice-summary">
+                    In view of the upcoming semester examinations, the university central library will remain open 24/7 with Wi-Fi and study rooms.
+                  </p>
+                  <a href="#library" class="notice-link">Library Guidelines &rarr;</a>
+                </article>
+
+                <!-- Notice 4 -->
+                <article class="notice-card">
+                  <div class="notice-top">
+                    <span class="notice-tag tag-seminar">Workshop</span>
+                    <span class="notice-time">3 days ago</span>
+                  </div>
+                  <h3 class="notice-headline">Guest Lecture on AI &amp; Cloud Infrastructure</h3>
+                  <p class="notice-summary">
+                    Industry leaders from Google Cloud will host a seminar in the Main Auditorium on Saturday, Nov 28 at 02:00 PM.
+                  </p>
+                  <a href="#events" class="notice-link">Reserve Seat &rarr;</a>
+                </article>
+
+              </div>
+            </section>
+
+            <!-- ========================================================
+                 H. UPCOMING EVENTS
+                 Upcoming college events, dates, and short descriptions
+                 ======================================================== -->
+            <section id="events" class="dashboard-panel panel-events">
+              <div class="panel-header">
+                <div class="panel-title-group">
+                  <span class="panel-icon icon-navy">🎉</span>
+                  <div>
+                    <h2 class="panel-title">Upcoming College Events</h2>
+                    <p class="panel-desc">Mark your calendar for campus activities.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="events-list">
+
+                <!-- Event 1 -->
+                <article class="event-card">
+                  <div class="event-date-badge">
+                    <span class="date-month">DEC</span>
+                    <span class="date-day">12</span>
+                  </div>
+                  <div class="event-content">
+                    <span class="event-category">Annual Tech Fest</span>
+                    <h3 class="event-name">Innovate 2026: Campus Tech Conclave</h3>
+                    <p class="event-desc">Robotics battles, project exhibitions, competitive coding, and drone racing events.</p>
+                    <span class="event-venue">📍 Campus Arena &bull; 09:00 AM Onwards</span>
+                  </div>
+                </article>
+
+                <!-- Event 2 -->
+                <article class="event-card">
+                  <div class="event-date-badge date-amber">
+                    <span class="date-month">DEC</span>
+                    <span class="date-day">20</span>
+                  </div>
+                  <div class="event-content">
+                    <span class="event-category">Sports &amp; Athletics</span>
+                    <h3 class="event-name">Annual Inter-Department Sports Meet</h3>
+                    <p class="event-desc">Track and field competitions, football, badminton, and basketball tournament finals.</p>
+                    <span class="event-venue">📍 University Sports Ground</span>
+                  </div>
+                </article>
+
+                <!-- Event 3 -->
+                <article class="event-card">
+                  <div class="event-date-badge date-purple">
+                    <span class="date-month">JAN</span>
+                    <span class="date-day">05</span>
+                  </div>
+                  <div class="event-content">
+                    <span class="event-category">Academic Workshop</span>
+                    <h3 class="event-name">Winter Web &amp; Python Bootcamp</h3>
+                    <p class="event-desc">5-day hands-on certified winter training program covering algorithms and web stacks.</p>
+                    <span class="event-venue">📍 Computer Center Auditorium</span>
+                  </div>
+                </article>
+
+              </div>
+            </section>
+
+            <!-- Student Quick Academic Links / Resource Portal -->
+            <section class="dashboard-panel panel-resources" id="library">
+              <div class="panel-header">
+                <h3 class="panel-title" style="font-size: 1.05rem;">Quick Academic Resources</h3>
+              </div>
+              <div class="resource-links">
+                <a href="#library" class="resource-btn">
+                  <span class="resource-icon">📖</span>
+                  <span>E-Library &amp; IEEE Papers</span>
+                </a>
+                <a href="#examination" class="resource-btn">
+                  <span class="resource-icon">📑</span>
+                  <span>Previous Year Question Papers</span>
+                </a>
+                <a href="#attendance" class="resource-btn">
+                  <span class="resource-icon">🎓</span>
+                  <span>Semester Syllabus &amp; Lab Manuals</span>
+                </a>
+              </div>
+            </section>
+
+          </div>
+
+        </div>
+
+      </main>
+
+      <!-- ==============================================================
+           DASHBOARD FOOTER
+           Academic project credit & university disclaimer
+           ============================================================== -->
+      <footer class="dashboard-footer">
+        <div class="footer-inner">
+          <p>&copy; 2026 Apex Institute of Technology &bull; Student Academic Management Dashboard.</p>
+          <p class="footer-note">Designed with pure HTML5 &amp; CSS3 for 1st Year B.Tech Web Development Project &bull; No Backend Required</p>
+        </div>
+      </footer>
+
+    </div>
+
+  </div>
+
+</body>
+</html>
